@@ -13,64 +13,109 @@ class ConvertorLenght
 	double lenght_yd; //yard
 	double lenght_in; //inch
 	double lenght_mi; //mile
+	double lenght_cin;//for enter
+
 public:
 	ConvertorLenght()
 	{
 		lenght_m = 0;
 		cout << "lenght = " << lenght_m << endl;
 	}
+	double SetLenghtInMetres()
+	{
+		cout << "Enter the length in metres: ";
+		cin >> lenght_cin;
+		lenght_m = lenght_cin;
+		return 0;
+	}
+	double GetCurrentLenghtInMetres()
+	{
+		cout << lenght_m << "m \n";
+		return 0;
+	}
+	double GetCurrentLenghtInFoots()
+	{
+		lenght_ft = lenght_m * 3.28084;
+		cout << lenght_ft;
+		return 0;
+	}
+	double GetCurrentLenghtInYards()
+	{
+		lenght_yd = lenght_m * 1.09361;
+		cout << lenght_yd;
+		return 0;
+	}
+	double GetCurrentLenghtInInchs()
+	{
+		lenght_in = lenght_m * 39.3701;
+		cout << lenght_in;
+		return 0;
+	}
+	double GetCurrentLenghtInMiles()
+	{
+		lenght_mi = lenght_m * 0.000621371;
+		cout << lenght_mi;
+		return 0;
+	}
 };
 
 int main()
 {
 	int i;
-	ConvertorLenght Lenght;
-	cout << "1.Set lenght in metres" << endl;
-	cout << "2.Get current lenght in metres" << endl;
-	cout << "3.Get current lenght in foot" << endl;
-	cout << "4.Get current lenght in yard " << endl;
-	cout << "5.Get current lenght in inch " << endl;
-	cout << "6.Get current lenght in miles " << endl;
-	cout << "7.Exit" << " ";
-	cin >> i;
-	switch (i)
+	int x = 0;
+	ConvertorLenght lenght;
+	while (x == 0)
 	{
-	case 1:
-	{
-		system("pause");
-		break;
-	}
-	case 2:
-	{
-		system("pause");
-		break;
-	}
-	case 3:
-	{
-		system("pause");
-		break;
-	}
-	case 4:
-	{
-		system("pause");
-		break;
-	}
-	case 5:
-	{
-		system("pause");
-		break;
-	}
-	case 6:
-	{
-		system("pause");
-		break;
-	}
-	case 7:
-	{
-		exit(EXIT_SUCCESS);
-		system("pause");
-		break;
-	}
+		cout << "1.Set lenght in metres" << endl;
+		cout << "2.Get current lenght in metres" << endl;
+		cout << "3.Get current lenght in foots" << endl;
+		cout << "4.Get current lenght in yards " << endl;
+		cout << "5.Get current lenght in inchs " << endl;
+		cout << "6.Get current lenght in miles " << endl;
+		cout << "7.Exit" << endl;
+		cout << "Enter a menu item: ";
+		cin >> i;
+		switch (i)
+		{
+		case 1:
+		{
+			lenght.SetLenghtInMetres();
+			system("pause");
+			break;
+		}
+		case 2:
+		{
+			lenght.GetCurrentLenghtInMetres();
+			system("pause");
+			break;
+		}
+		case 3:
+		{
+			system("pause");
+			break;
+		}
+		case 4:
+		{
+			system("pause");
+			break;
+		}
+		case 5:
+		{
+			system("pause");
+			break;
+		}
+		case 6:
+		{
+			system("pause");
+			break;
+		}
+		case 7:
+		{
+			exit(EXIT_SUCCESS);
+			system("pause");
+			break;
+		}
+		}
 	}
 	system("pause");
 	return 0;
