@@ -16,10 +16,14 @@ class ConvertorLenght
 	double lenght_cin;//for enter
 
 public:
-	ConvertorLenght()
+	ConvertorLenght(double _lenght_m = 0)
 	{
-		lenght_m = 0;
-		cout << "lenght = " << lenght_m << endl;
+		lenght_m = _lenght_m;
+	}
+	ConvertorLenght & operator=(const ConvertorLenght & lenght1)
+	{
+		lenght_m = lenght1.lenght_m;
+		return *this;
 	}
 	void SetLenghtInMetres()
 	{
@@ -57,7 +61,10 @@ int main()
 {
 	int i;
 	int x = 0;
-	ConvertorLenght lenght;
+	setlocale(LC_ALL, "Russian");
+	ConvertorLenght lenght, lenght1, lenght2(10);
+	lenght1 = lenght2;//verification of the assignment operator
+	cout << "lenght=0m now" << endl;
 	cout << "1.Set lenght in metres" << endl;
 	cout << "2.Get current lenght in metres" << endl;
 	cout << "3.Get current lenght in foots" << endl;
