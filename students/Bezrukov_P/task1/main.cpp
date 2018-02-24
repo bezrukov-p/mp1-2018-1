@@ -6,71 +6,93 @@
 #include <stdio.h>
 using namespace std;
 
-class ConvertorLenght
+class ConvertorLength
 {
-	double lenght_m;  //metres
-	double lenght_ft; //foot
-	double lenght_yd; //yard
-	double lenght_in; //inch
-	double lenght_mi; //mile
-	double lenght_cin;//for enter
+	double length_m;  //metres
 
 public:
-	ConvertorLenght(double _lenght_m = 0)
+	ConvertorLength(double _length_m = 0)
 	{
-		lenght_m = _lenght_m;
+		length_m = _length_m;
 	}
-	ConvertorLenght & operator=(const ConvertorLenght & lenght1)
+	ConvertorLength & operator=(const ConvertorLength & length1)
 	{
-		lenght_m = lenght1.lenght_m;
+		length_m = length1.length_m;
 		return *this;
 	}
-	void SetLenghtInMetres()
+
+	void SetLengthInMetres(double _length_m)
 	{
-		cout << "Enter the length in metres: ";
-		cin >> lenght_cin;
-		lenght_m = lenght_cin;
+		length_m = _length_m;
 	}
-	void GetCurrentLenghtInMetres()
+
+	double GetCurrentLengthInMetres()
 	{
-		cout << "lenght=" << lenght_m << "m \n";
+		return length_m;
 	}
-	void GetCurrentLenghtInFoots()
+
+	double GetCurrentLengthInFoots()
 	{
-		lenght_ft = lenght_m * 3.28084;
-		cout << "lenght=" << lenght_ft << "ft \n";
+		return length_m * 3.28084;
 	}
-	void GetCurrentLenghtInYards()
+
+	double GetCurrentLengthInYards()
 	{
-		lenght_yd = lenght_m * 1.09361;
-		cout << "lenght=" << lenght_yd << "yd \n";
+		return length_m * 1.09361;
 	}
-	void GetCurrentLenghtInInchs()
+
+	double GetCurrentLengthInInchs()
 	{
-		lenght_in = lenght_m * 39.3701;
-		cout << "lenght=" << lenght_in << "in \n";
+		return length_m * 39.3701;
 	}
-	void GetCurrentLenghtInMiles()
+
+	double GetCurrentLengthInMiles()
 	{
-		lenght_mi = lenght_m * 0.000621371;
-		cout << "lenght=" << lenght_mi << "mi \n";
+		return length_m * 0.000621371;
 	}
+
+	void PrintCurrentLengthInMetres()
+	{
+		cout << "length=" << GetCurrentLengthInMetres() << "m \n";
+	}
+
+	void PrintCurrentLengthInFoots()
+	{
+		cout << "length=" << GetCurrentLengthInFoots() << "ft \n";
+	}
+
+	void PrintCurrentLengthInYards()
+	{
+		cout << "length=" << GetCurrentLengthInYards() << "yd \n";
+	}
+
+	void PrintCurrentLengthInInchs()
+	{
+		cout << "length=" << GetCurrentLengthInInchs() << "in \n";
+	}
+
+	void PrintCurrentLengthInMiles()
+	{
+		cout << "length=" << GetCurrentLengthInMiles() << "mi \n";
+	}
+
 };
 
 int main()
 {
 	int i;
 	int x = 0;
+	double length_in;
 	setlocale(LC_ALL, "Russian");
-	ConvertorLenght lenght, lenght1, lenght2(10);
-	lenght1 = lenght2;//verification of the assignment operator
-	cout << "lenght=0m now" << endl;
-	cout << "1.Set lenght in metres" << endl;
-	cout << "2.Get current lenght in metres" << endl;
-	cout << "3.Get current lenght in foots" << endl;
-	cout << "4.Get current lenght in yards " << endl;
-	cout << "5.Get current lenght in inchs " << endl;
-	cout << "6.Get current lenght in miles " << endl;
+	ConvertorLength length, length1, length2(10);
+	length1 = length2;//verification of the assignment operator
+	cout << "length=0m now" << endl;
+	cout << "1.Set length in metres" << endl;
+	cout << "2.Get current length in metres" << endl;
+	cout << "3.Get current length in foots" << endl;
+	cout << "4.Get current length in yards " << endl;
+	cout << "5.Get current length in inchs " << endl;
+	cout << "6.Get current length in miles " << endl;
 	cout << "7.Exit" << endl;
 	while (x == 0)
 	{
@@ -80,32 +102,35 @@ int main()
 		{
 		case 1:
 		{
-			lenght.SetLenghtInMetres();
+			cout << "Enter value: ";
+			cin >> length_in;
+			length.SetLengthInMetres(length_in);
+			cout << "length=" << length_in << "m now \n";
 			break;
 		}
 		case 2:
 		{
-			lenght.GetCurrentLenghtInMetres();
+			length.PrintCurrentLengthInMetres();
 			break;
 		}
 		case 3:
 		{
-			lenght.GetCurrentLenghtInFoots();
+			length.PrintCurrentLengthInFoots();
 			break;
 		}
 		case 4:
 		{
-			lenght.GetCurrentLenghtInYards();
+			length.PrintCurrentLengthInYards();
 			break;
 		}
 		case 5:
 		{
-			lenght.GetCurrentLenghtInInchs();
+			length.PrintCurrentLengthInInchs();
 			break;
 		}
 		case 6:
 		{
-			lenght.GetCurrentLenghtInMiles();
+			length.PrintCurrentLengthInMiles();
 			break;
 		}
 		case 7:
