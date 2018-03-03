@@ -79,12 +79,10 @@ public:
 		return min;
 	}
 
-	int CheckOrder()
+	bool CheckOrderAsc()
 	{
 		int i;
 		int odd1 = 0;
-		int odd2 = 0;
-		int y;
 		for (i = 0; i < array_m - 1; i++)
 		{
 			if (array_i[i] <= array_i[i + 1])
@@ -96,8 +94,21 @@ public:
 				odd1 = 1;
 				break;
 			}
+		}
+		if (odd1 == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
-		};
+	bool CheckOrderDisc()
+	{
+		int i;
+		int odd2 = 0;
 		for (i = 0; i < array_m - 1; i++)
 		{
 			if (array_i[i] >= array_i[i + 1])
@@ -110,30 +121,14 @@ public:
 				break;
 			}
 		}
-		if ((odd1 + odd2) == 0)
+		if (odd2 == 0)
 		{
-			y = 0;
+			return true;
 		}
 		else
 		{
-			if ((odd1 + odd2) == 2)
-			{
-				y = 1;
-			}
-			else
-			{
-				if (odd1 == 0)
-				{
-					y = 2;
-				}
-				else
-				{
-					y = 3;
-				}
-			}
+			return false;
 		}
-		return y;
-
 	}
 
 	int GetSubArraySize()
@@ -149,7 +144,7 @@ public:
 		return array_m_sub;
 	}
 
-	double SubArray(int k)
+	double* SubArray()
 	{
 		int i;
 		int j;
@@ -160,7 +155,16 @@ public:
 			i = j * 2 + 1;
 			array_i_sub[j] = array_i[i];
 		}
-		return array_i_sub[k];
+		return array_i_sub;
+	}
+
+	void DisplaySubArray()
+	{
+		int j;
+		for (j = 0; j < GetSubArraySize(); j++)
+		{
+			cout << " Index = " << j * 2 + 1 << " Element = " << array_i_sub[j] << endl;
+		}
 	}
 
 	~DynamicArray()
@@ -176,8 +180,6 @@ int main()
 	int index;
 	int x = 0;
 	int a;
-	int subsize;
-	int j;
 	double value;
 	DynamicArray array_obj;
 	cout << "1.To set the size of the array" << endl;
@@ -261,22 +263,24 @@ int main()
 		}
 		case 6:
 		{
-			if (array_obj.CheckOrder() == 0)
+			if (array_obj.CheckOrderAsc() && array_obj.CheckOrderDisc())
 			{
 				cout << " All elements are equal" << endl << endl;
 			}
 			else
-				if (array_obj.CheckOrder() == 1)
+				if (array_obj.CheckOrderAsc())
 				{
-					cout << " The array is not ordered" << endl << endl;
+					cout << " The elements are ordered in ascending order" << endl << endl;
 				}
 				else
-					if (array_obj.CheckOrder() == 2)
+					if (array_obj.CheckOrderDisc())
 					{
-						cout << " The elements are ordered in ascending order" << endl << endl;
+						cout << " The elements are ordered in descending order" << endl << endl;
 					}
 					else
-						cout << " The elements are ordered in descending order" << endl << endl;
+					{
+						cout << " The array is not ordered" << endl << endl;
+					}
 			break;
 		}
 		case 7:
@@ -288,11 +292,8 @@ int main()
 			}
 			else
 			{
-				subsize = array_obj.GetSubArraySize();
-				for (j = 0; j < subsize; j++)
-				{
-					cout << " Index = " << j * 2 + 1 << " Element = " << array_obj.SubArray(j) << endl;
-				}
+				array_obj.SubArray();
+				array_obj.DisplaySubArray();
 				cout << endl;
 				break;
 			}
