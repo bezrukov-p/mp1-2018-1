@@ -9,18 +9,15 @@ using namespace std;
 class DynamicArray
 {
 	int array_m;
-	double min;
 	double *array_i;
 	double *array_i_sub;
 	int array_m_sub;
 
 public:
-	int i;
-	int j;
-	int odd;
 
 	DynamicArray(int _array_m = 1)
 	{
+		int i;
 		array_m = _array_m;
 		array_i = new double[array_m];
 		for (i = 0; i < array_m; i++)
@@ -29,20 +26,22 @@ public:
 		}
 	}
 
-	DynamicArray& operator=(DynamicArray &arr)
+	DynamicArray& operator=(const DynamicArray &arr)
 	{
-			delete[] array_i;
-			array_m = arr.array_m;
-			array_i = new double[array_m];
-			for (i = 0; i < array_m; i++)
-			{
-				array_i[i] = arr.array_i[i];
-			}
-			return *this;
+		int i;
+		delete[] array_i;
+		array_m = arr.array_m;
+		array_i = new double[array_m];
+		for (i = 0; i < array_m; i++)
+		{
+			array_i[i] = arr.array_i[i];
+		}
+		return *this;
 	}
 
 	void SetArraySize(int _array_m)
 	{
+		int i;
 		delete[] array_i;
 		array_m = _array_m;
 		array_i = new double[array_m];
@@ -51,46 +50,41 @@ public:
 			array_i[i] = 0;
 		}
 	}
-	
-	void DisplayArraySize()
+
+	int GetArraySize()
 	{
-		cout << " Array size=" << array_m << " now"; 
+		return array_m;
 	}
 
-	void SetElement(int i,double value)
+	void SetElement(int i, double value)
 	{
-		if ((i>=0) && (i<array_m))
 		array_i[i] = value;
-		cout << " Incorrect index" << endl;
 	}
 
-	void DisplayElement(int i)
+	double GetElement(int i)
 	{
-		if ((i >= 0) && (i<array_m))
-		cout << " The element at index " << i << " is equal to " << array_i[i] << endl;
-		cout << " Incorrect index" << endl;
+		return array_i[i];
 	}
 
 	double GetMinimumElement()
 	{
+		int i;
+		double min;
 		min = array_i[0];
 		for (i = 1; i < array_m; i++)
 		{
 			if (array_i[i] < array_i[i - 1])
 				min = array_i[i];
 		}
-        return min;
+		return min;
 	}
 
-	void DisplayMinimumElement()
+	int CheckOrder()
 	{
-		cout << " Minimal element= " << GetMinimumElement() << endl;
-	}
-
-	void CheckOrder()
-	{
+		int i;
 		int odd1 = 0;
 		int odd2 = 0;
+		int y;
 		for (i = 0; i < array_m - 1; i++)
 		{
 			if (array_i[i] <= array_i[i + 1])
@@ -116,54 +110,57 @@ public:
 				break;
 			}
 		}
-			if ((odd1 + odd2) == 0)
-			{
-				cout << " All elements are equal" << endl << endl;
-			}
-			else
-			{
-				if ((odd1 + odd2) == 2)
-				{
-					cout << " The array is not ordered" << endl << endl;
-				}
-				else
-				{
-					if (odd1 == 0)
-					{
-						cout << " The elements are ordered in ascending order" << endl << endl;
-					}
-					else
-					{
-						cout << " The elements are ordered in descending order";
-					}					
-				}			
-
-
-		}
-
-	}
-
-	void SubArray()
-	{
-		delete[] array_i_sub;
-		if (array_m == 1)
+		if ((odd1 + odd2) == 0)
 		{
-			cout << " One element in array" << endl;
+			y = 0;
 		}
 		else
 		{
-			if (array_m % 2 == 0)
-				array_m_sub = array_m / 2;
-			array_m_sub = (array_m - 1) / 2;
-			array_i_sub = new double[array_m_sub];
-			for (i = 1; i < array_m; i = i + 2)
+			if ((odd1 + odd2) == 2)
 			{
-				j = (i - 1) / 2;
-				array_i_sub[j] = array_i[i];
-				cout << " Index " << i << " Element = " << array_i_sub[j] << endl;
+				y = 1;
 			}
-			cout << endl;
+			else
+			{
+				if (odd1 == 0)
+				{
+					y = 2;
+				}
+				else
+				{
+					y = 3;
+				}
+			}
 		}
+		return y;
+
+	}
+
+	int GetSubArraySize()
+	{
+		if (array_m % 2 == 0)
+		{
+			array_m_sub = array_m / 2;
+		}
+		else
+		{
+			array_m_sub = (array_m - 1) / 2;
+		}
+		return array_m_sub;
+	}
+
+	double SubArray(int k)
+	{
+		int i;
+		int j;
+		delete[] array_i_sub;
+		array_i_sub = new double[GetSubArraySize()];
+		for (j = 0; j < GetSubArraySize(); j++)
+		{
+			i = j * 2 + 1;
+			array_i_sub[j] = array_i[i];
+		}
+		return array_i_sub[k];
 	}
 
 	~DynamicArray()
@@ -179,6 +176,8 @@ int main()
 	int index;
 	int x = 0;
 	int a;
+	int subsize;
+	int j;
 	double value;
 	DynamicArray array_obj;
 	cout << "1.To set the size of the array" << endl;
@@ -218,7 +217,7 @@ int main()
 		case 2:
 		{
 			cout << endl;
-			array_obj.DisplayArraySize();
+			cout << " Array size=" << array_obj.GetArraySize() << " now";
 			cout << endl;
 			break;
 		}
@@ -226,36 +225,77 @@ int main()
 		{
 			cout << " Enter the index of: ";
 			cin >> index;
-			cout << " Entered value: ";
-			cin >> value;
-			array_obj.SetElement(index,value);
-			cout << endl;
-			break;
+			if ((index < 0) || (index >= array_obj.GetArraySize()))
+			{
+				cout << " Incorrect index" << endl << endl;
+				break;
+			}
+			else {
+				cout << " Entered value: ";
+				cin >> value;
+				array_obj.SetElement(index, value);
+				cout << endl;
+				break;
+			}
 		}
 		case 4:
 		{
 			cout << " Enter the index of: ";
 			cin >> index;
-			array_obj.DisplayElement(index);
-			cout << endl;
-			break;
+			if ((index < 0) || (index >= array_obj.GetArraySize()))
+			{
+				cout << " Incorrect index" << endl << endl;
+				break;
+			}
+			else {
+				cout << " The element at index " << index << " is equal to " << array_obj.GetElement(index) << endl;
+				cout << endl;
+				break;
+			}
 		}
 		case 5:
 		{
-			array_obj.DisplayMinimumElement();
+			cout << " Minimal element= " << array_obj.GetMinimumElement() << endl;
 			cout << endl;
 			break;
 		}
 		case 6:
 		{
-			array_obj.CheckOrder();
+			if (array_obj.CheckOrder() == 0)
+			{
+				cout << " All elements are equal" << endl << endl;
+			}
+			else
+				if (array_obj.CheckOrder() == 1)
+				{
+					cout << " The array is not ordered" << endl << endl;
+				}
+				else
+					if (array_obj.CheckOrder() == 2)
+					{
+						cout << " The elements are ordered in ascending order" << endl << endl;
+					}
+					else
+						cout << " The elements are ordered in descending order" << endl << endl;
 			break;
 		}
 		case 7:
 		{
-			array_obj.SubArray();
-			cout << endl;
-			break;
+			if (array_obj.GetArraySize() == 1)
+			{
+				cout << " One element in array" << endl << endl;
+				break;
+			}
+			else
+			{
+				subsize = array_obj.GetSubArraySize();
+				for (j = 0; j < subsize; j++)
+				{
+					cout << " Index = " << j * 2 + 1 << " Element = " << array_obj.SubArray(j) << endl;
+				}
+				cout << endl;
+				break;
+			}
 		}
 		case 8:
 		{
@@ -279,4 +319,3 @@ int main()
 	}
 
 }
-
