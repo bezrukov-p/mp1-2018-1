@@ -8,7 +8,16 @@
 #include <string>
 #include <vector>
 #include <locale.h> 
+#include <windows.h>
 using namespace std;
+
+//void SetColor(int text, int background)
+//{
+//	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+//	SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
+//}
+
+enum eDirection {STOP = 0,LEFT,RIGHT,UP,DOWN};
 
 struct XY {
 	int x;
@@ -26,19 +35,25 @@ struct XY {
 class GameSnake
 {
 	bool gameOver;
+	bool gameWin;
 	vector<XY> snake;
 	XY fruit;
+	eDirection dir;
+
 	int width;
 	int height;
-	int length_win;
-	int length_snake;
+
+	int snake_win;
+
+	bool snake_xy;
 public:
-	/*GameSnake() {
-		gameOver = false;
-	}*/
 
 	bool GameOver(){
 		return gameOver;
+	}
+
+	bool GameWin() {
+		return gameWin;
 	}
 
 	void Draw(){
@@ -54,14 +69,24 @@ public:
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width + 4; j++) {
-				if (i == snake[0].y / 2 && j == snake[0].x/2)
-					cout << "o";
-				else if(i == fruit.y - 1 && j == fruit.x + 2)
-					cout << "F";
-				else if (j == 0 || j == 1 || j == width +2 || j == width + 3 )
-					cout << "#";
-				else
-					cout << " ";
+				snake_xy = false;
+				for (int k = 0; k < snake.size(); k++) {
+					if (i == snake[k].y - 1 && j == snake[k].x + 1) {
+						if (k == 0)
+							cout << "0";
+						else
+							cout << "o";
+						snake_xy = true;
+					}
+				}
+				if (!snake_xy) {
+					if (i == fruit.y - 1 && j == fruit.x + 1)
+						cout << "F";
+					else if (j == 0 || j == 1 || j == width + 2 || j == width + 3)
+						cout << "#";
+					else
+						cout << " ";
+				}
 			}
 			cout << endl;
 		}
@@ -75,21 +100,91 @@ public:
 
 		cout << "Width:" << width << endl;
 		cout << "Height:" << height << endl;
-		cout << "The length of the snake to win:" << length_win << endl;
-		cout << "Length snake now:" << length_snake << endl;
+		cout << "The length of the snake to win:" << snake_win << endl;
+		cout << "Length snake now:" << snake.size() << endl;
+		cout << "Press 'x' to exit" << endl;
 	}
 
 	void Setup(int _width,int _height,int _length_win) {
+		dir = STOP;
 		gameOver = false;
+		gameWin = false;
 		width = _width;
 		height = _height;
-		length_win = _length_win;
+		snake_win = _length_win;
 	    SnakeRand();
-	fruitRand: FruitRand();
-		for (int i = 0; i < snake.size(); i++) {
-			if (fruit == snake[i])
-				goto fruitRand;
+		FruitRand();
+	}
+
+	void Input() {
+		if (_kbhit()) {
+			switch (_getch())
+			{
+			case 'a':
+				dir = LEFT;
+				break;
+			case 'd':
+				dir = RIGHT;
+				break;
+			case 'w':
+				dir = UP;
+				break;
+			case 's':
+				dir = DOWN;
+				break;
+			case 'x':
+				gameOver = true;
+				break;
+			}
 		}
+	}
+
+	void Logic()
+	{
+		XY snake_2;
+		snake_2 = snake[0];
+		bool fruit_eat = false;
+		if (snake[0] == fruit) {
+			fruit_eat = true;
+			FruitRand();
+		}
+		switch (dir)
+		{
+		case LEFT:
+			snake[0].x--;
+			break;
+		case RIGHT:
+			snake[0].x++;
+			break;
+		case UP:
+			snake[0].y--;
+			break;
+		case DOWN:
+			snake[0].y++;
+			break;
+		}
+		if (dir != STOP)
+		{
+			if (fruit_eat) {
+				snake.insert(snake.begin() + 1, snake_2);
+			}
+			else {
+				snake.insert(snake.begin() + 1, snake_2);
+				snake.pop_back();
+			}
+		}
+
+		for (int i = 1; i < snake.size(); i++) {
+			if (snake[i] == snake[0]) {
+				gameOver = true;
+				return;
+			}
+		}
+		if (snake[0].x < 1 || snake[0].x>width || snake[0].y < 1 || snake[0].y > height)
+			gameOver = true;
+		if (snake_win == snake.size())
+			gameWin = true;
+		dir = STOP;
 	}
 
 	void SnakeRand() {
@@ -104,8 +199,13 @@ public:
 	}
 
 	void FruitRand() {
+	fruitRand:
 		fruit.x = rand() % width + 1;
 		fruit.y = rand() % height + 1;
+		for (int i = 0; i < snake.size(); i++) {
+			if (fruit == snake[i])
+				goto fruitRand;
+		}
 	}
 
 };
@@ -113,22 +213,31 @@ public:
 int main()
 {
 	srand(time(0));
-	/*int width;
+	int width;
 	int height;
-	int length_win;*/
+	int length_win;
 	GameSnake gameSnake;
 
-	/*cout << "Wight:";
+	cout << "Wight:";
 	cin >> width;
 	cout << "Height:";
 	cin >> height;
 	cout << "The length of the snake to win:";
 	cin >> length_win;
-    gameSnake.Setup(width,height,length_win);*/
-	gameSnake.Setup(19, 19, 10);
+    gameSnake.Setup(width,height,length_win);
+	/*gameSnake.Setup(13, 7, 10);*/
 
-	while (!gameSnake.GameOver()) {
+	while (!gameSnake.GameOver() && !gameSnake.GameWin()){
 		gameSnake.Draw();
+		gameSnake.Input();
+		gameSnake.Logic();
 	}
+	if (gameSnake.GameOver()) {
+		cout << "GAME OVER" << endl;
+	}
+	if (gameSnake.GameWin()) {
+		cout << "GAME WIN" << endl;
+	}
+	system("pause");
 	return 0;
 }
