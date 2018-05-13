@@ -44,6 +44,7 @@ class GameSnake
 	int height;
 
 	int snake_win;
+	int speed;
 
 	bool snake_xy;
 public:
@@ -102,13 +103,15 @@ public:
 		cout << "Height:" << height << endl;
 		cout << "The length of the snake to win:" << snake_win << endl;
 		cout << "Length snake now:" << snake.size() << endl;
+		cout << "Speed(sec):" << speed / 1000 << endl;
 		cout << "Press 'x' to exit" << endl;
 	}
 
-	void Setup(int _width,int _height,int _length_win) {
+	void Setup(int _width,int _height,int _length_win,int _speed) {
 		dir = STOP;
 		gameOver = false;
 		gameWin = false;
+		speed = _speed;
 		width = _width;
 		height = _height;
 		snake_win = _length_win;
@@ -117,6 +120,7 @@ public:
 	}
 
 	void Input() {
+		Sleep(speed);
 		if (_kbhit()) {
 			switch (_getch())
 			{
@@ -148,6 +152,7 @@ public:
 			fruit_eat = true;
 			FruitRand();
 		}
+
 		switch (dir)
 		{
 		case LEFT:
@@ -163,6 +168,7 @@ public:
 			snake[0].y++;
 			break;
 		}
+
 		if (dir != STOP)
 		{
 			if (fruit_eat) {
@@ -180,11 +186,11 @@ public:
 				return;
 			}
 		}
+
 		if (snake[0].x < 1 || snake[0].x>width || snake[0].y < 1 || snake[0].y > height)
 			gameOver = true;
 		if (snake_win == snake.size())
 			gameWin = true;
-		dir = STOP;
 	}
 
 	void SnakeRand() {
@@ -216,6 +222,7 @@ int main()
 	int width;
 	int height;
 	int length_win;
+	double speed;
 	GameSnake gameSnake;
 
 	cout << "Wight:";
@@ -224,8 +231,11 @@ int main()
 	cin >> height;
 	cout << "The length of the snake to win:";
 	cin >> length_win;
-    gameSnake.Setup(width,height,length_win);
-	/*gameSnake.Setup(13, 7, 10);*/
+	cout << "Speed(sec):";
+	cin >> speed;
+	speed *= 1000;
+    gameSnake.Setup(width,height,length_win,speed);
+	/*gameSnake.Setup(13, 7, 10,300);*/
 
 	while (!gameSnake.GameOver() && !gameSnake.GameWin()){
 		gameSnake.Draw();
