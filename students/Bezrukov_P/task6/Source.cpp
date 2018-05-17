@@ -11,11 +11,19 @@
 #include <windows.h>
 using namespace std;
 
-//void SetColor(int text, int background)
-//{
-//	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-//	SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
-//}
+void SetColor(int text, int background)
+{
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
+}
+
+void SetCur(int x, int y)//установка курсора на позицию  x y 
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+};
 
 enum eDirection {STOP = 0,LEFT,RIGHT,UP,DOWN};
 
@@ -58,7 +66,7 @@ public:
 	}
 
 	void Draw(){
-		system("cls");
+		SetCur(0, 0);
 		for (int i = 0; i < width + 4; i++) {
 			cout << "#";
 		}
@@ -73,16 +81,25 @@ public:
 				snake_xy = false;
 				for (int k = 0; k < snake.size(); k++) {
 					if (i == snake[k].y - 1 && j == snake[k].x + 1) {
-						if (k == 0)
+						if (k == 0) {
+							SetColor(2, 0);
 							cout << "0";
-						else
+							SetColor(15, 0);
+						}
+						else {
+							SetColor(4, 0);
 							cout << "o";
+							SetColor(15, 0);
+						}
 						snake_xy = true;
 					}
 				}
 				if (!snake_xy) {
-					if (i == fruit.y - 1 && j == fruit.x + 1)
+					if (i == fruit.y - 1 && j == fruit.x + 1) {
+						SetColor(14, 0);
 						cout << "F";
+						SetColor(15, 0);
+					}
 					else if (j == 0 || j == 1 || j == width + 2 || j == width + 3)
 						cout << "#";
 					else
@@ -103,7 +120,7 @@ public:
 		cout << "Height:" << height << endl;
 		cout << "The length of the snake to win:" << snake_win << endl;
 		cout << "Length snake now:" << snake.size() << endl;
-		cout << "Speed(sec):" << speed / 1000 << endl;
+		cout << "Speed(sec):" << speed << endl;
 		cout << "Press 'x' to exit" << endl;
 	}
 
@@ -187,10 +204,21 @@ public:
 			}
 		}
 
+		//
 		if (snake[0].x < 1 || snake[0].x>width || snake[0].y < 1 || snake[0].y > height)
 			gameOver = true;
 		if (snake_win == snake.size())
 			gameWin = true;
+
+		//проходить стены
+		/*if (snake[0].x < 1)
+			snake[0].x = width;
+		if (snake[0].x > width)
+			snake[0].x = 1;
+		if (snake[0].y < 1)
+			snake[0].y = height;
+		if (snake[0].y > height)
+			snake[0].y = 1;*/
 	}
 
 	void SnakeRand() {
@@ -222,8 +250,10 @@ int main()
 	int width;
 	int height;
 	int length_win;
-	double speed;
+	int speed;
 	GameSnake gameSnake;
+	HWND hWnd = GetForegroundWindow();
+	ShowWindow(hWnd, SW_SHOWMAXIMIZED);
 
 	cout << "Wight:";
 	cin >> width;
@@ -231,11 +261,11 @@ int main()
 	cin >> height;
 	cout << "The length of the snake to win:";
 	cin >> length_win;
-	cout << "Speed(sec):";
+	cout << "Speed(sec*1000):";
 	cin >> speed;
-	speed *= 1000;
     gameSnake.Setup(width,height,length_win,speed);
-	/*gameSnake.Setup(13, 7, 10,300);*/
+	/*gameSnake.Setup(15, 15, 40,150);*/
+	system("cls");
 
 	while (!gameSnake.GameOver() && !gameSnake.GameWin()){
 		gameSnake.Draw();
