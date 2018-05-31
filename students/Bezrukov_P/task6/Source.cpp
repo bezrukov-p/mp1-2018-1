@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+п»ї#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <time.h>
 #include <math.h>
@@ -17,7 +17,7 @@ void SetColor(int text, int background)
 	SetConsoleTextAttribute(hStdOut, (WORD)((background << 4) | text));
 }
 
-void SetCur(int x, int y)//установка курсора на позицию  x y 
+void SetCur(int x, int y)//ГіГ±ГІГ Г­Г®ГўГЄГ  ГЄГіГ°Г±Г®Г°Г  Г­Г  ГЇГ®Г§ГЁГ¶ГЁГѕ  x y 
 {
 	COORD coord;
 	coord.X = x;
@@ -25,7 +25,7 @@ void SetCur(int x, int y)//установка курсора на позицию  x y
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 };
 
-enum eDirection {STOP = 0,LEFT,RIGHT,UP,DOWN};
+enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
 
 struct XY {
 	int x;
@@ -57,7 +57,7 @@ class GameSnake
 	bool snake_xy;
 public:
 
-	bool GameOver(){
+	bool GameOver() {
 		return gameOver;
 	}
 
@@ -65,7 +65,7 @@ public:
 		return gameWin;
 	}
 
-	void Draw(){
+	void Draw() {
 		SetCur(0, 0);
 		for (int i = 0; i < width + 4; i++) {
 			cout << "#";
@@ -124,7 +124,7 @@ public:
 		cout << "Press 'x' to exit" << endl;
 	}
 
-	void Setup(int _width,int _height,int _length_win,int _speed) {
+	void Setup(int _width, int _height, int _length_win, int _speed) {
 		dir = STOP;
 		gameOver = false;
 		gameWin = false;
@@ -132,7 +132,7 @@ public:
 		width = _width;
 		height = _height;
 		snake_win = _length_win;
-	    SnakeRand();
+		SnakeRand();
 		FruitRand();
 	}
 
@@ -210,20 +210,20 @@ public:
 		if (snake_win == snake.size())
 			gameWin = true;
 
-		//проходить стены
+		//ГЇГ°Г®ГµГ®Г¤ГЁГІГј Г±ГІГҐГ­Г»
 		/*if (snake[0].x < 1)
-			snake[0].x = width;
+		snake[0].x = width;
 		if (snake[0].x > width)
-			snake[0].x = 1;
+		snake[0].x = 1;
 		if (snake[0].y < 1)
-			snake[0].y = height;
+		snake[0].y = height;
 		if (snake[0].y > height)
-			snake[0].y = 1;*/
+		snake[0].y = 1;*/
 	}
 
 	void SnakeRand() {
 		int x, y;
-		x = rand() % (width-4) + 1;
+		x = rand() % (width - 4) + 1;
 		y = rand() % height + 1;
 		snake.push_back({ x,y });
 		for (int i = 1; i < 5; i++) {
@@ -263,11 +263,11 @@ int main()
 	cin >> length_win;
 	cout << "Speed(sec*1000):";
 	cin >> speed;
-    gameSnake.Setup(width,height,length_win,speed);
+	gameSnake.Setup(width, height, length_win, speed);
 	/*gameSnake.Setup(15, 15, 40,150);*/
 	system("cls");
 
-	while (!gameSnake.GameOver() && !gameSnake.GameWin()){
+	while (!gameSnake.GameOver() && !gameSnake.GameWin()) {
 		gameSnake.Draw();
 		gameSnake.Input();
 		gameSnake.Logic();
